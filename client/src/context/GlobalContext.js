@@ -73,7 +73,7 @@ async function fetchWorld({ apiKey, dispatch, urlSlug }) {
   if (!apiKey || !urlSlug) return;
   try {
     const topia = await new Topia({
-      apiDomain: "api-stage.topia.io",
+      apiDomain: process.env.REACT_APP_INSTANCE_DOMAIN,
       apiKey,
     });
     const selectedWorld = await new WorldFactory(topia).create(urlSlug);
