@@ -31,6 +31,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
+// TODO: This should be added to the SDK as a .normalize() function that can be applied to any class.
 app.use(function (req, res, next) {
   const ogSend = res.send;
   res.send = function (data) {
