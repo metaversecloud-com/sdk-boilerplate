@@ -24,10 +24,10 @@
   "license": "ISC",
   "main": "index.js",
   "scripts": {
-    "build": "npm install && npm run build -w server && npm run build -w client",
+    "build": "npm install && npm run build -ws",
     "link-sdk": "yalc link @rtsdk/topia",
     "unlink-sdk": "yalc remove @rtsdk/topia",
-    "start": "npm start"
+    "start": "npm start -ws"
   },
   "type": "module",
   "version": "1.0.0"
