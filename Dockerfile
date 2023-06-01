@@ -1,7 +1,7 @@
-FROM node:18-alpine3.17
+FROM --platform=linux/arm64 node:18-alpine3.17
 WORKDIR /app
-COPY server .
-COPY client .
+ADD server ./server
+ADD client .client
 COPY package.json .
 EXPOSE 3000
 RUN npm run build
