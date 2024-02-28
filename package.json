@@ -18,7 +18,14 @@
   },
   "private": true,
   "scripts": {
-    "build": "cd client && npm run build",
+    "build": "npm run build -w client",
+    "build-dev": "npm run build",
+    "link-sdk": "yalc link @rtsdk/topia",
+    "unlink-sdk": "yalc remove @rtsdk/topia",
+    "server": "node server/index.js",
+    "client": "npm start --prefix client",
+    "start": "npm start -ws",
+    "build-client": "cd client && npm run build",
     "dev": "concurrently \"npm run dev-server\" \"npm run dev-client\"",
     "dev-server": "cd server && nodemon index.js",
     "dev-client": "cd client && npm run dev"
