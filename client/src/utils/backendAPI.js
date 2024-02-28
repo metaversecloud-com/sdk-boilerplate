@@ -1,12 +1,8 @@
+
 import axios from "axios";
 
-const BASE_URL = process.env.API_URL || "";
+const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 let backendAPI = axios;
-
-const initBackendAPI = function () {
-  backendAPI = null;
-  backendAPI = axios;
-};
 
 const setupBackendAPI = (interactiveParams) => {
   backendAPI = axios.create({
@@ -35,8 +31,4 @@ const setupBackendAPI = (interactiveParams) => {
   }
 };
 
-export { backendAPI, initBackendAPI, setupBackendAPI };
-
-export default () => {
-  return backendAPI;
-};
+export { backendAPI, setupBackendAPI };
