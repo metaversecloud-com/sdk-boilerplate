@@ -1,34 +1,36 @@
 {
+  "name": "sdk-boilerplate",
   "author": "metaversecloud.com | topia.io",
   "description": "",
   "dependencies": {
     "@rtsdk/topia": "^0.8.5",
-    "axios": "^1.2.1",
-    "body-parser": "^1.20.1",
-    "concurrently": "^7.6.0",
-    "cors": "^2.8.5",
-    "dotenv": "^16.0.3",
-    "express": "^4.18.2",
+    "axios": "^1.6.7",
+    "concurrently": "^8.2.2",
+    "dotenv": "^16.4.5",
     "yalc": "^1.0.0-pre.53"
-  },
-  "engines": {
-    "node": "18.14"
   },
   "keywords": [],
   "license": "ISC",
-  "main": "index.js",
-  "name": "sdk-boilerplate",
+  "main": "./server/index.js",
+  "devDependencies": {
+    "prettier": "3.2.5"
+  },
   "private": true,
   "scripts": {
     "build": "npm run build -w client",
-    "build-dev": "npm run build",
     "link-sdk": "yalc link @rtsdk/topia",
     "unlink-sdk": "yalc remove @rtsdk/topia",
-    "server": "node server/index.js",
+    "server": "npm run start --prefix server",
     "client": "npm start --prefix client",
-    "start": "npm start -ws",
-    "start-dev": "concurrently \"npm run server\" \"npm run client\""
+    "start": "npm start --workspace=server",
+    "dev": "concurrently \"npm run dev-server\" \"npm run dev-client\"",
+    "dev-server": "npm run dev --prefix server",
+    "dev-client": "npm run start --prefix client"
   },
   "type": "module",
-  "version": "1.0.0"
+  "version": "1.0.0",
+  "workspaces": [
+    "client",
+    "server"
+  ]
 }
