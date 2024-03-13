@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-dotenv.config();
+dotenv.config({ path: "../.env" });
 
 import { Topia, AssetFactory, DroppedAssetFactory, UserFactory, VisitorFactory, WorldFactory } from "@rtsdk/topia";
 
@@ -10,6 +10,7 @@ const config = {
   interactiveKey: process.env.INTERACTIVE_KEY,
   interactiveSecret: process.env.INTERACTIVE_SECRET,
 };
+console.log("🚀 ~ file: topiaInit.js:13 ~ config:", config)
 
 const myTopiaInstance = await new Topia(config);
 
