@@ -4,6 +4,7 @@ import GlobalState from "./GlobalState";
 
 const initialState = {
   hasInteractiveParams: false,
+  hasSetupBackend: false,
   selectedWorld: {},
   urlSlug: "",
 };

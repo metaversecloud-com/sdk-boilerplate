@@ -1,4 +1,4 @@
-import { SET_INTERACTIVE_PARAMS } from "./types";
+import { SET_INTERACTIVE_PARAMS, SET_HAS_SETUP_BACKEND } from "./types";
 
 const globalReducer = (state, action) => {
   const { type, payload } = action;
@@ -8,6 +8,12 @@ const globalReducer = (state, action) => {
         ...state,
         ...payload,
         hasInteractiveParams: true,
+      };
+    case SET_HAS_SETUP_BACKEND:
+      return {
+        ...state,
+        ...payload,
+        hasSetupBackend: true,
       };
     default: {
       throw new Error(`Unhandled action type: ${type}`);
