@@ -9,7 +9,7 @@
     "dotenv": "^16.4.5"
   },
   "keywords": [],
-  "license": "ISC",
+  "license": "BSD-3-Clause",
   "main": "./server/index.js",
   "devDependencies": {
     "prettier": "3.2.5"

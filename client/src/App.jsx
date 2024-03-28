@@ -68,7 +68,8 @@ const App = () => {
     [dispatch],
   );
 
-  const setHasSetupBackend = useCallback((success) => {
+  const setHasSetupBackend = useCallback(
+    (success) => {
       dispatch({
         type: SET_HAS_SETUP_BACKEND,
         payload: { hasSetupBackend: success },
@@ -77,13 +78,13 @@ const App = () => {
     [dispatch],
   );
 
-  const setupBackend = async () =>{
-      const setupResult = await setupBackendAPI(interactiveParams);
-      setHasSetupBackend(setupResult.success);
-      if(!setupResult.success) navigate('*');
-      else setHasInitBackendAPI(true);
-  }
-  
+  const setupBackend = async () => {
+    const setupResult = await setupBackendAPI(interactiveParams);
+    setHasSetupBackend(setupResult.success);
+    if (!setupResult.success) navigate("*");
+    else setHasInitBackendAPI(true);
+  };
+
   useEffect(() => {
     if (interactiveParams.assetId) {
       setInteractiveParams({
