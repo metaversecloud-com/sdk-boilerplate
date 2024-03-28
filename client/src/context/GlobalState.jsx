@@ -1,4 +1,3 @@
-import { PropsWithChildren } from "react";
 import { GlobalDispatchContext, GlobalStateContext } from "./GlobalContext";
 
 const GlobalState = (props) => {

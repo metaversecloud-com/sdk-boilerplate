@@ -1,13 +1,14 @@
 import express from "express";
 import {
   handleDropAsset,
+  handleCheckInteractiveCredentials,
   handleGetDroppedAssetsWithUniqueName,
   handleGetWorldDetails,
   handleGetDroppedAsset,
   handleGetVisitor,
   handleUpdateWorldDataObject,
-  moveVisitor,
   handleRemoveDroppedAssets,
+  moveVisitor,
 } from "./controllers/index.js";
 import { getVersion } from "./utils/getVersion.js";
 
@@ -17,8 +18,16 @@ router.get("/system/health", (req, res) => {
   return res.json({
     appVersion: getVersion(),
     status: "OK",
+    envs: {
+      NODE_ENV: process.env.NODE_ENV,
+      INSTANCE_DOMAIN: process.env.INSTANCE_DOMAIN,
+      INTERACTIVE_KEY: process.env.INTERACTIVE_KEY,
+      S3_BUCKET: process.env.S3_BUCKET,
+    },
   });
 });
+
+router.get("/system/interactive-credentials", handleCheckInteractiveCredentials);
 
 // Dropped Assets
 router.get("/dropped-asset-with-unique-name", handleGetDroppedAssetsWithUniqueName);

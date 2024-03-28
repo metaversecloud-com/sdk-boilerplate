@@ -29,11 +29,21 @@ app.use(express.urlencoded({ extended: false }));
 
 if (process.env.NODE_ENV === "development") {
   const corsOptions = {
-    origin: "http://localhost:3000",
+    origin: ["http://localhost:3000", "http://localhost:5173"],
     credentials: true, //access-control-allow-credentials:true
     optionSuccessStatus: 200,
   };
   app.use(cors(corsOptions));
+} else {
+  // Node serves the files for the React app
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = path.dirname(__filename);
+  app.use(express.static(path.resolve(__dirname, "../client/build")));
+
+  // All other GET requests not handled before will return our React app
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "../client/build", "index.html"));
+  });
 }
 
 app.use(function (req, res, next) {
@@ -41,10 +51,7 @@ app.use(function (req, res, next) {
   res.send = function (data) {
     if (data) {
       try {
-        const cleanData = cleanReturnPayload(
-          typeof data === "string" ? JSON.parse(data) : data,
-          "topia"
-        );
+        const cleanData = cleanReturnPayload(typeof data === "string" ? JSON.parse(data) : data);
         res.send = ogSend;
         return res.send(cleanData);
       } catch (error) {
@@ -57,18 +64,6 @@ app.use(function (req, res, next) {
 });
 
 app.use("/api", router);
-
-if (process.env.NODE_ENV !== "development") {
-  // Node serves the files for the React app
-  const __filename = fileURLToPath(import.meta.url);
-  const __dirname = path.dirname(__filename);
-  app.use(express.static(path.resolve(__dirname, "../client/build")));
-
-  // All other GET requests not handled before will return our React app
-  app.get("*", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "../client/build", "index.html"));
-  });
-}
 
 app.listen(PORT, () => {
   console.log(`Server is running on port: ${PORT}`);
