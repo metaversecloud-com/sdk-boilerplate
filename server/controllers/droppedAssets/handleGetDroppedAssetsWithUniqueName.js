@@ -1,8 +1,10 @@
-import { World, errorHandler } from "../../utils/index.js";
+import { World, errorHandler, getCredentials } from "../../utils/index.js";
 
 export const handleGetDroppedAssetsWithUniqueName = async (req, res) => {
   try {
-    const { interactivePublicKey, interactiveNonce, isPartial = true, uniqueName, urlSlug, visitorId } = req.query;
+    const credentials = getCredentials(req.query);
+    const { interactivePublicKey, interactiveNonce, uniqueName, urlSlug, visitorId } = credentials;
+    const { isPartial = true } = req.query;
 
     const world = World.create(urlSlug, {
       credentials: {
