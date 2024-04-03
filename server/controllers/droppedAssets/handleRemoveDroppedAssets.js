@@ -1,8 +1,9 @@
-import { errorHandler, getDroppedAsset } from "../../utils/index.js";
+import { errorHandler, getCredentials, getDroppedAsset } from "../../utils/index.js";
 
 export const handleRemoveDroppedAssets = async (req, res) => {
   try {
-    const droppedAsset = await getDroppedAsset(req.query);
+    const credentials = getCredentials(req.query);
+    const droppedAsset = await getDroppedAsset(credentials);
 
     if (!droppedAsset) throw { message: "No dropped asset found" };
     droppedAsset.deleteDroppedAsset();

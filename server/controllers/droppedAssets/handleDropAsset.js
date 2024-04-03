@@ -1,8 +1,9 @@
-import { Asset, DroppedAsset, errorHandler } from "../../utils/index.js";
+import { Asset, DroppedAsset, errorHandler, getCredentials } from "../../utils/index.js";
 
 export const handleDropAsset = async (req, res) => {
   try {
-    const { interactiveNonce, interactivePublicKey, urlSlug, visitorId } = req.query;
+    const credentials = getCredentials(req.query);
+    const { interactiveNonce, interactivePublicKey, urlSlug, visitorId } = credentials;
     const { assetId, isInteractive, position, uniqueName } = req.body;
 
     const asset = Asset.create(assetId, {

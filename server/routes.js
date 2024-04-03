@@ -1,7 +1,6 @@
 import express from "express";
 import {
   handleDropAsset,
-  handleCheckInteractiveCredentials,
   handleGetDroppedAssetsWithUniqueName,
   handleGetWorldDetails,
   handleGetDroppedAsset,
@@ -10,6 +9,7 @@ import {
   handleRemoveDroppedAssets,
   moveVisitor,
 } from "./controllers/index.js";
+import { checkInteractiveCredentials } from './middleware/checkInteractiveCredentials.js';
 import { getVersion } from "./utils/getVersion.js";
 
 const router = express.Router();
@@ -27,20 +27,18 @@ router.get("/system/health", (req, res) => {
   });
 });
 
-router.get("/system/interactive-credentials", handleCheckInteractiveCredentials);
-
 // Dropped Assets
-router.get("/dropped-asset-with-unique-name", handleGetDroppedAssetsWithUniqueName);
-router.post("/dropped-asset", handleDropAsset);
-router.get("/dropped-asset", handleGetDroppedAsset);
-router.delete("/dropped-asset", handleRemoveDroppedAssets);
+router.get("/dropped-asset-with-unique-name", checkInteractiveCredentials, handleGetDroppedAssetsWithUniqueName);
+router.post("/dropped-asset", checkInteractiveCredentials, handleDropAsset);
+router.get("/dropped-asset", checkInteractiveCredentials, handleGetDroppedAsset);
+router.delete("/dropped-asset", checkInteractiveCredentials, handleRemoveDroppedAssets);
 
 // Visitor
-router.get("/visitor", handleGetVisitor);
-router.put("/visitor/move", moveVisitor);
+router.get("/visitor", checkInteractiveCredentials, handleGetVisitor);
+router.put("/visitor/move", checkInteractiveCredentials, moveVisitor);
 
 // World
-router.get("/world", handleGetWorldDetails);
-router.put("/world/data-object", handleUpdateWorldDataObject);
+router.get("/world", checkInteractiveCredentials, handleGetWorldDetails);
+router.put("/world/data-object", checkInteractiveCredentials, handleUpdateWorldDataObject);
 
 export default router;
