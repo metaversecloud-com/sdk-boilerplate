@@ -2,17 +2,15 @@ name: CICD
 
 on:
   push:
-    branches: [dev]
+      branches:
+        - test_ci
   workflow_dispatch:
     inputs:
-      env:
-        required: true
-        type: string
-        default: 'dev'
+      version_number:
+        description: "Version number to force package.json to"
+        required: false
 env:
   REGISTRY: '368076259134.dkr.ecr.us-east-1.amazonaws.com'
-  REPOSITORY: 'sdk-example'
-  IMAGE_TAG: 'sdk-chess-game'
         
 permissions:
   id-token: write # This is required for requesting the JWT
@@ -20,17 +18,37 @@ permissions:
 jobs:
   Build:
     runs-on: ubuntu-latest
-    environment: ${{ inputs.env || 'dev' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4.1.1
         
+      - name: Set version number
+        id: version_number
+        run: |
+          if [ "${{ github.event }}" == "push"]; then
+            echo "Github event is push"
+            npm version patch
+            echo "VERSION_NUMBER"=$(npm pkg get version --workspaces=false)" >> "$GITHUB_ENV"
+            echo "New version is ${{ github.env.VERSION_NUMBER }}"
+          else
+            echo "Github event is not push"
+            npm version ${{ github.event.inputs.version_number }}
+            echo "VERSION_NUMBER=${{ github.event.inputs.version_number }}" >> $GITHUB_ENV
+            echo "New version is ${{ github.env.VERSION_NUMBER }}"
+          fi
+          git tag -a ${{github.env.VERSION_NUMBER}} -m "Version ${{github.env.VERSION_NUMBER}}"
+          git config user.name 'GitHub Actions'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git add package.json
+          git commit -m "Release ${{ github.env.VERSION_NUMBER }}"
+          git push origin --tags
+
       - uses: actions/setup-node@v4.0.1
         with:
           node-version: 20.10
           cache: 'npm'
-      - run: npm i
-      - run: CI=false npm run build
+      - run: npm i --omit=dev
+      - run: npm run build
         
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3.0.0
