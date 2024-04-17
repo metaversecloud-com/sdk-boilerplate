@@ -1,6 +1,7 @@
 import { useReducer } from "react";
 import { globalReducer } from "./reducer";
 import GlobalState from "./GlobalState";
+import PropTypes from "prop-types";
 
 const initialState = {
   hasInteractiveParams: false,
@@ -17,6 +18,10 @@ const GlobalProvider = ({ children }) => {
       {children}
     </GlobalState>
   );
+};
+
+GlobalProvider.propTypes = {
+  children: PropTypes.node.isRequired,
 };
 
 export default GlobalProvider;

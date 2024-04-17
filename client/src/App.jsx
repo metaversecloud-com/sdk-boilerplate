@@ -68,12 +68,13 @@ const App = () => {
     [dispatch],
   );
 
-  const setHasSetupBackend = useCallback((success) => {
-    dispatch({
-      type: SET_HAS_SETUP_BACKEND,
-      payload: { hasSetupBackend: success },
-    });
-  },
+  const setHasSetupBackend = useCallback(
+    (success) => {
+      dispatch({
+        type: SET_HAS_SETUP_BACKEND,
+        payload: { hasSetupBackend: success },
+      });
+    },
     [dispatch],
   );
 
@@ -84,20 +85,18 @@ const App = () => {
         console.error(error?.response?.data?.message);
         navigate("*");
       })
-      .finally(() => setHasInitBackendAPI(true))
+      .finally(() => setHasInitBackendAPI(true));
   };
 
   useEffect(() => {
     if (interactiveParams.assetId) {
-      setInteractiveParams({
-        ...interactiveParams,
-      });
+      setInteractiveParams({ ...interactiveParams });
     }
   }, [interactiveParams, setInteractiveParams]);
 
   useEffect(() => {
     if (!hasInitBackendAPI) setupBackend();
-  }, [hasInitBackendAPI, interactiveParams]);
+  }, [hasInitBackendAPI]);
 
   return (
     <Routes>
