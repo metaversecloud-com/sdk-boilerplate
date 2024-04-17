@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { GlobalStateContext } from "@context/GlobalContext";
 import { backendAPI } from "@utils/backendAPI";
 
@@ -20,7 +20,7 @@ const Home = () => {
     }
   };
 
-  if(!hasSetupBackend) return <div />
+  if (!hasSetupBackend) return <div />;
 
   return (
     <div className="container p-6 flex items-center justify-start">
@@ -39,9 +39,7 @@ const Home = () => {
           )}
         </div>
 
-        <button onClick={handleGetDroppedAsset}>
-          Get Dropped Asset Details
-        </button>
+        <button onClick={handleGetDroppedAsset}>Get Dropped Asset Details</button>
         {droppedAsset && (
           <div className="flex flex-col w-full items-start">
             <p className="mt-4 mb-2">
