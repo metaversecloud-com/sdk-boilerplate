@@ -26,6 +26,28 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+// A malformed JSON body gets a clean 400 instead of Express' default error page (stack trace, file paths).
+app.use((err, req, res, next) => {
+  if (err?.type === "entity.parse.failed") return res.status(400).json({ success: false, error: "Invalid JSON" });
+  next(err);
+});
+// Strips the interactive secret, signed JWTs and session credentials from every /api response,
+// including raw SDK objects and SDK errors. Must be registered before the routes to run at all.
+app.use("/api", function (req, res, next) {
+  const ogSend = res.send;
+  res.send = function (data) {
+    res.send = ogSend;
+    if (!data) return res.send(data);
+    try {
+      // Clean a copy: deleting fields from a live SDK object would break code still using it.
+      return res.send(cleanReturnPayload(JSON.parse(typeof data === "string" ? data : JSON.stringify(data))));
+    } catch {
+      // Not JSON (plain text, buffers): nothing to scrub.
+      return res.send(data);
+    }
+  };
+  next();
+});
 
 app.use("/api", router);
 
@@ -48,23 +70,12 @@ if (process.env.NODE_ENV === "development") {
   });
 }
 
-app.use(function (req, res, next) {
-  const ogSend = res.send;
-  res.send = function (data) {
-    if (data) {
-      try {
-        const cleanData = cleanReturnPayload(typeof data === "string" ? JSON.parse(data) : data);
-        res.send = ogSend;
-        return res.send(cleanData);
-      } catch (error) {
-        console.log(error);
-        next();
-      }
-    }
-  };
-  next();
+// Prevent crashes from unhandled promise rejections (e.g., API timeouts after response sent).
+// @rtsdk/topia registers its own handler that calls process.exit(1) when it's imported: remove it first.
+process.removeAllListeners("unhandledRejection");
+process.on("unhandledRejection", (reason) => {
+  console.error("Unhandled Rejection:", reason);
 });
-
 
 app.listen(PORT, () => {
   console.log(`Server is running on port: ${PORT}`);
